@@ -437,7 +437,9 @@ kissat_parse_dimacs (kissat * solver,
 {
   START (parse);
   const char *res;
+  printf("-----test7-----\n");
   res = parse_dimacs (solver, file, strict, lineno_ptr, max_var_ptr);
+  printf("-----test8-----\n");
   if (!solver->inconsistent)
     kissat_defrag_watches (solver);
   STOP (parse);
