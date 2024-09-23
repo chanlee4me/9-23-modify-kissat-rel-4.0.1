@@ -870,6 +870,8 @@ static int run_application (kissat *solver, int argc, char **argv,
 
 int kissat_application (kissat *solver, int argc, char **argv) {
   bool cancel_alarm;
+  solver->htab.begin = NULL;
+  solver->htab.end = NULL;
   int res = run_application (solver, argc, argv, &cancel_alarm);
   if (cancel_alarm)
     alarm (0);
