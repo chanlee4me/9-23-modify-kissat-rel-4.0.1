@@ -792,6 +792,7 @@ static int run_application (kissat *solver, int argc, char **argv,
     return 1;
 #endif
   if (!parse_input (&application)) {
+    printf("----test3----\n");
 #ifndef NPROOFS
     close_proof (&application);
 #endif
