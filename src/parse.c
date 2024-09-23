@@ -308,6 +308,7 @@ parse_dimacs (kissat * solver, file * file,
 		  "parsed 'p cnf %d %" PRIu64 "' header", variables, clauses);
   *max_var_ptr = variables;
   kissat_reserve (solver, variables);
+  printf("-----test9-----\n");
   uint64_t parsed = 0;
   int lit = 0;
   for (;;)
@@ -415,6 +416,7 @@ parse_dimacs (kissat * solver, file * file,
 	  lit = 0;
 	}
       kissat_add (solver, lit);
+	  printf("-----test10-----\n");
     }
   if (lit)
     return "trailing zero missing";

@@ -277,7 +277,9 @@ void kissat_add (kissat *solver, int elit) {
 #endif
     unsigned ilit = kissat_import_literal (solver, elit);
     //added by 
+    printf("-----test11-----\n");
     push_back_htab(solver, &solver->htab, 0);
+    printf("-----test12-----\n");
     //end
     const mark mark = MARK (ilit);
     if (!mark) {
