@@ -312,7 +312,7 @@ parse_dimacs (kissat * solver, file * file,
   uint64_t parsed = 0;
   int lit = 0;
   //added by cl
-  int tempCount = 0;
+//   int tempCount = 0;
   //end
   for (;;)
     {
@@ -419,7 +419,7 @@ parse_dimacs (kissat * solver, file * file,
 	  lit = 0;
 	}
       kissat_add (solver, lit);
-	  printf("-----cltest10: %d-----\n", tempCount);
+	  printf("-----cltest10: %d-----\n", tempCount++);
     }
   printf("-----cltest13-----\n");
   if (lit)
