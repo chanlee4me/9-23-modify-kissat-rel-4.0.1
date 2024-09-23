@@ -311,6 +311,9 @@ parse_dimacs (kissat * solver, file * file,
   printf("-----cltest9-----\n");
   uint64_t parsed = 0;
   int lit = 0;
+  //added by cl
+  int tempCount = 0;
+  //end
   for (;;)
     {
       ch = NEXT ();
@@ -416,9 +419,9 @@ parse_dimacs (kissat * solver, file * file,
 	  lit = 0;
 	}
       kissat_add (solver, lit);
-	  printf("-----cltest10-----\n");
+	  printf("-----cltest10: %d-----\n", tempCount);
     }
-	printf("-----cltest13-----\n");
+  printf("-----cltest13-----\n");
   if (lit)
     return "trailing zero missing";
   if (strict != RELAXED_PARSING && parsed < clauses)
