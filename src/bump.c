@@ -72,9 +72,10 @@ static inline void bump_analyzed_variable_score (kissat *solver,
   if (new_score > MAX_SCORE)
     kissat_rescale_scores (solver);
 }
-
-void kissat_bump_variable (kissat *solver, unsigned idx) {
-  bump_analyzed_variable_score (solver, idx);
+//added by cl
+// void kissat_bump_variable (kissat *solver, unsigned idx) {
+void kissat_bump_variable (kissat *solver, unsigned idx, int glue) {
+  bump_analyzed_variable_score (solver, idx, glue);
 }
 //added by cl
 // static void bump_analyzed_variable_scores (kissat *solver) {
