@@ -169,11 +169,11 @@ void kissat_reserve (kissat *solver, int max_var) {
     for (unsigned idx = 0; idx != (unsigned) max_var; idx++)
       kissat_activate_literal (solver, LIT (idx));
   }
-  printf("-----test1-----\n");
+  printf("-----cltest1-----\n");
   //added by cl
   initialize_htab(solver, &solver->htab, max_var);
   //end
-  printf("-----test2-----\n");
+  printf("-----cltest2-----\n");
 
 }
 
@@ -277,9 +277,9 @@ void kissat_add (kissat *solver, int elit) {
 #endif
     unsigned ilit = kissat_import_literal (solver, elit);
     //added by 
-    printf("-----test11-----\n");
+    printf("-----cltest11-----\n");
     push_back_htab(solver, &solver->htab, 0);
-    printf("-----test12-----\n");
+    printf("-----cltest12-----\n");
     //end
     const mark mark = MARK (ilit);
     if (!mark) {

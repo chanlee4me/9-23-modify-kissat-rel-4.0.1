@@ -792,13 +792,13 @@ static int run_application (kissat *solver, int argc, char **argv,
     return 1;
 #endif
   if (!parse_input (&application)) {
-    printf("----test3----\n");
+    printf("----cltest3----\n");
 #ifndef NPROOFS
     close_proof (&application);
 #endif
     return 1;
   }
-    printf("----test4----\n");
+    printf("----cltest4----\n");
 #ifndef QUIET
 #ifndef NOPTIONS
   print_options (solver);
@@ -806,9 +806,9 @@ static int run_application (kissat *solver, int argc, char **argv,
   print_limits (&application);
   kissat_section (solver, "solving");
 #endif
-  printf("----test5----\n");
+  printf("----cltest5----\n");
   int res = kissat_solve (solver);
-  printf("----test6----\n");
+  printf("----cltest6----\n");
 #ifndef NPROOFS
   close_proof (&application);
 #endif

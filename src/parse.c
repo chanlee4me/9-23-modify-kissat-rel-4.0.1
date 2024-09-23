@@ -308,7 +308,7 @@ parse_dimacs (kissat * solver, file * file,
 		  "parsed 'p cnf %d %" PRIu64 "' header", variables, clauses);
   *max_var_ptr = variables;
   kissat_reserve (solver, variables);
-  printf("-----test9-----\n");
+  printf("-----cltest9-----\n");
   uint64_t parsed = 0;
   int lit = 0;
   for (;;)
@@ -416,8 +416,9 @@ parse_dimacs (kissat * solver, file * file,
 	  lit = 0;
 	}
       kissat_add (solver, lit);
-	  printf("-----test10-----\n");
+	  printf("-----cltest10-----\n");
     }
+	printf("-----cltest13-----\n");
   if (lit)
     return "trailing zero missing";
   if (strict != RELAXED_PARSING && parsed < clauses)
@@ -439,9 +440,9 @@ kissat_parse_dimacs (kissat * solver,
 {
   START (parse);
   const char *res;
-  printf("-----test7-----\n");
+  printf("-----cltest7-----\n");
   res = parse_dimacs (solver, file, strict, lineno_ptr, max_var_ptr);
-  printf("-----test8-----\n");
+  printf("-----cltest8-----\n");
   if (!solver->inconsistent)
     kissat_defrag_watches (solver);
   STOP (parse);
