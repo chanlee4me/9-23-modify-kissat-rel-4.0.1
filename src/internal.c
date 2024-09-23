@@ -169,6 +169,7 @@ void kissat_reserve (kissat *solver, int max_var) {
     for (unsigned idx = 0; idx != (unsigned) max_var; idx++)
       kissat_activate_literal (solver, LIT (idx));
   }
+  printf("-----test1-----\n");
   //added by cl
   initialize_htab(solver, &solver->htab, max_var);
   //end
