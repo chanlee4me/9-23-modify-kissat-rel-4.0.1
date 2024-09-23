@@ -173,6 +173,8 @@ void kissat_reserve (kissat *solver, int max_var) {
   //added by cl
   initialize_htab(solver, &solver->htab, max_var);
   //end
+  printf("-----test2-----\n");
+
 }
 
 int kissat_get_option (kissat *solver, const char *name) {
