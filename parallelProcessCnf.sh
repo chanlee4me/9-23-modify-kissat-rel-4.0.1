@@ -1,62 +1,76 @@
 #!/bin/bash
 
-#updated by cl 2024/9/4 
-cd /home/wgf/chenli/SAT/2022cnf
-#结果文件的位置
-processed_files="/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/2022cnf.csv"
-#处理的cnf文件个数
-total_files=400
-# 错误日志文件的位置
-error_log="/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/error.log"
-# 信息文件的位置
-info_file="/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/info"
+# 需要修改的路径
+CNF_DIR="/home/wgf/chenli/SAT/2022cnf"
+OUTPUT_DIR="/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1"
+CADICAL_PATH="/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/build/kissat"
 
+# 结果文件的位置
+PROCESSED_FILES="$OUTPUT_DIR/2022cnf.csv"
+# 处理的cnf文件个数
+TOTAL_FILES=400
 # 获取系统的CPU核心数
-num_cores=$(nproc)
+NUM_CORES=$(nproc)
+
+# 切换到CNF文件目录
+cd "$CNF_DIR"
 
 # 生成未处理文件的列表
 find . -name "*.cnf" | while read file; do
-    if ! grep -q "$(readlink -f "$file")" "$processed_files"; then
+    if ! grep -q "$(readlink -f "$file")" "$PROCESSED_FILES"; then
         echo "$file"
     fi
 done > /tmp/unprocessed_files.txt
 
-# 只处理指定数量的文件，使用系统核心数作为并行数
-head -n $total_files /tmp/unprocessed_files.txt | xargs -n 1 -P $num_cores -I {} bash -c '
-    file="{}"
+# 处理文件的函数
+process_file() {
+    file="$1"
     str=$(readlink -f "$file")
-    echo "begin $str"
+    echo "开始处理文件: $str"
     
     temp_file=$(mktemp)
     printf "%s," "$str" >> "$temp_file"
-    result=$(timeout 3600 /home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/build/kissat "$str" 2>>'"$error_log"')
-    echo "$result" | awk -F "[{}]" "/statistics/{flag1=1;next} flag1{print \$0; if(++n1==29) flag1=0} /resources/{flag2=1;next} flag2{print \$0; if(++n2==6) exit}" >> "$temp_file"
     
-    # 提取结果状态
-    status=$(echo "$result" | grep -oE "SATISFIABLE|UNSATISFIABLE|UNKNOWN")
+    output_file=$(mktemp)
+    
+    # 使用timeout命令限制程序执行时间
+    timeout -s SIGTERM 3600 "$CADICAL_PATH" "$str" > "$output_file" 2>&1
+    if [ $? -eq 124 ]; then
+        echo "文件处理超时: $str"
+    else
+        echo "文件处理完成: $str"
+    fi
+    
+    # 提取UNSATISFIABLE、SATISFIABLE、UNKNOWN
+    status=$(grep -Eo "UNSATISFIABLE|SATISFIABLE|UNKNOWN" "$output_file")
     
     # 如果没有检测到状态，则标记为 TIMEOUT
     if [ -z "$status" ]; then
         status="TIMEOUT"
     fi
     
-    # 检查状态是否已经存在于文件中
-    if ! grep -q "$status" "$temp_file"; then
-        # 如果状态不存在，则添加到文件末尾
-        echo "$status" >> "$temp_file"
-    fi
+    echo "$status" >> "$temp_file"
+    
+    # 提取process-time所在行
+    grep "process-time" "$output_file" >> "$temp_file"
     
     printf "\n" >> "$temp_file"
-    echo "end $str"
     
-    mv "$temp_file" "/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/2022cnf.csv.$BASHPID"
-    
-    # 提取并输出信息到 info 文件
-    echo "$result" | grep -E "htab.capacity = [0-9]+, (idx = [0-9]+|max_var = [0-9]+)" >> '"$info_file"'
-'
+    mv "$temp_file" "$OUTPUT_DIR/2022cnf.csv.$BASHPID"
+    rm "$output_file"  # 删除临时输出文件
+}
+
+export -f process_file
+export CADICAL_PATH
+export OUTPUT_DIR
+
+# 使用xargs命令并行处理文件
+head -n $TOTAL_FILES /tmp/unprocessed_files.txt | xargs -n 1 -P $NUM_CORES -I {} bash -c 'process_file "{}"'
 
 # 合并所有临时文件到一个csv文件中
-for tmp_file in /home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/2022cnf.csv.*; do
-    cat "$tmp_file" >> "/home/wgf/chenli/SAT/9-23-modify-kissat-rel-4.0.1/2022cnf.csv"
+for tmp_file in "$OUTPUT_DIR"/2022cnf.csv.*; do
+    cat "$tmp_file" >> "$PROCESSED_FILES"
     rm "$tmp_file" # 删除临时文件
 done
+
+echo "所有文件处理完成"
