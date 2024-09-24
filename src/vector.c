@@ -56,6 +56,7 @@ void set_htab_element(kissat *solver, vector *htab, size_t index, unsigned value
     data[index] = value;
 }
 //初始化函数，用于根据提供的大小初始化 'htab'，并将元素值初始化为 0
+//也可以修改 htab 的大小
 void initialize_htab(kissat *solver, vector *htab, size_t size) {
     size_t old_size = kissat_size_vector(htab);
     if (old_size == 0) {
