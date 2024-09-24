@@ -560,7 +560,6 @@ int kissat_analyze (kissat *solver, clause *conflict) {
       printf("-----cltest25-----\n");
       set_htab_element(solver, &solver->htab, idx, val + 1);
       printf("-----cltest23-----\n");
-
     }
     //end
     unsigned conflict_level;

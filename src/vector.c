@@ -45,6 +45,7 @@ static void fix_vector_pointers_after_moving_stack (kissat *solver,
 unsigned get_htab_element(kissat *solver, vector *htab, size_t index) {
     size_t size = kissat_size_vector(htab);
     assert(index < size);
+    printf("-----cltest28-----\nindex = %zu\nsize = %zu\n", index, size);
     unsigned *data = kissat_begin_vector(solver, htab);
     return data[index];
 }
@@ -52,6 +53,7 @@ unsigned get_htab_element(kissat *solver, vector *htab, size_t index) {
 void set_htab_element(kissat *solver, vector *htab, size_t index, unsigned value) {
     size_t size = kissat_size_vector(htab);
     assert(index < size);
+    printf("-----cltest29-----\nindex = %zu\nsize = %zu\n", index, size);
     unsigned *data = kissat_begin_vector(solver, htab);
     data[index] = value;
 }
@@ -70,6 +72,7 @@ void initialize_htab(kissat *solver, vector *htab, size_t size) {
         for (size_t i = 0; i < delta; ++i) {
             kissat_push_vectors(solver, htab, 0);
         }
+        printf("-----cltest27-----\n");
     }
     // 如果 size <= old_size，可以选择不做任何操作或缩小 'htab'
 }
