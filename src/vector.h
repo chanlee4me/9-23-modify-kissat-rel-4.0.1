@@ -59,6 +59,8 @@ unsigned get_htab_element(struct kissat *, vector *, size_t);
 void set_htab_element(struct kissat *, vector *, size_t, unsigned);
 //初始化函数，用于根据提供的大小初始化 'htab'，并将元素值初始化为 0
 void initialize_htab(struct kissat *, vector *, size_t);
+//扩展 htab 大小
+void enlarge_htab(struct kissat *, vector *, size_t);
 //类似 push_back 的函数，可以指定要添加的值
 void push_back_htab(struct kissat *, vector *, unsigned);
 #endif

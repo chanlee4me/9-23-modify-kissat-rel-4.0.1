@@ -8,7 +8,10 @@
 
 #include <inttypes.h>
 #include <stddef.h>
-
+//added by cl
+#include <stdlib.h>
+#include <string.h>
+//end
 #ifndef COMPACT
 
 static void fix_vector_pointers_after_moving_stack (kissat *solver,
@@ -42,40 +45,53 @@ static void fix_vector_pointers_after_moving_stack (kissat *solver,
 
 //added by cl
 //通过索引访问htab中的元素
-unsigned get_htab_element(kissat *solver, vector *htab, size_t index) {
-    size_t size = kissat_size_vector(htab);
-    assert(index < size);
-    printf("-----cltest28-----\nindex = %zu\nsize = %zu\n", index, size);
-    // unsigned *data = kissat_begin_vector(solver, htab);
-    printf("-----cltest28.1-----\nhtab.begin = %u\n", *htab->begin);
-    return htab->begin[index];
+unsigned get_htab_element(kissat *solver, vector *v, size_t index) {
+    if (v->begin + index >= v->end) {
+      // 如果索引越界，可以根据需要处理，比如返回一个错误值或直接退出
+      return -1; // 返回一个错误值，假设是无符号整数 -1
+    }
+    return v->begin[index];
 }
 //通过索引修改htab中的元素
-void set_htab_element(kissat *solver, vector *htab, size_t index, unsigned value) {
-    size_t size = kissat_size_vector(htab);
-    assert(index < size);
-    printf("-----cltest29-----\nindex = %zu\nsize = %zu\n", index, size);
-    unsigned *data = kissat_begin_vector(solver, htab);
-    data[index] = value;
+void set_htab_element(kissat *solver, vector *v, size_t index, unsigned value) {
+    if (v->begin + index >= v->end) {
+        // 如果索引越界，可以根据需要处理
+        return;
+    }
+    v->begin[index] = value; // 通过指针加索引修改元素
 }
 //初始化函数，用于根据提供的大小初始化 'htab'，并将元素值初始化为 0
-//也可以修改 htab 的大小
-void initialize_htab(kissat *solver, vector *htab, size_t size) {
-    size_t old_size = kissat_size_vector(htab);
-    if (old_size == 0) {
-        // 如果 'htab' 为空，初始化为指定大小，元素值为 0
-        for (size_t i = 0; i < size; ++i) {
-            kissat_push_vectors(solver, htab, 0);
-        }
-    } else if (size > old_size) {
-        // 如果新的大小更大，扩展 'htab'，并将新元素初始化为 0
-        size_t delta = size - old_size;
-        for (size_t i = 0; i < delta; ++i) {
-            kissat_push_vectors(solver, htab, 0);
-        }
-        printf("-----cltest27-----\n");
+void initialize_htab(kissat *solver, vector *v, size_t size) {
+    // 使用 calloc 分配内存，并自动将所有元素初始化为 0
+    v->begin = (unsigned *)calloc(size, sizeof(unsigned));
+    if (v->begin == NULL) {
+        perror("Failed to allocate memory");
+        exit(EXIT_FAILURE);
     }
-    // 如果 size <= old_size，可以选择不做任何操作或缩小 'htab'
+    // end 指向数组的末尾
+    v->end = v->begin + size;
+}
+//扩展 htab 大小
+void enlarge_htab(kissat *solver, vector *v, size_t new_size){
+    unsigned current_size = v->end - v->begin; // 当前的大小
+    if (new_size <= current_size) {
+        return; // 如果新大小小于或等于当前大小，不做任何操作
+    }
+    // 分配新的内存，大小为 new_size
+    unsigned *new_begin = (unsigned *)malloc(new_size * sizeof(unsigned));
+    if (new_begin == NULL) {
+        perror("Failed to allocate memory");
+        exit(EXIT_FAILURE);
+    }
+    // 复制旧数据到新内存
+    memcpy(new_begin, v->begin, current_size * sizeof(unsigned));
+    // 将新增加的部分初始化为 0
+    memset(new_begin + current_size, 0, (new_size - current_size) * sizeof(unsigned));
+    // 释放旧的内存
+    free(v->begin);
+    // 更新 vector 的指针
+    v->begin = new_begin;
+    v->end = v->begin + new_size;
 }
 
 //类似 push_back 的函数，可以指定要添加的值

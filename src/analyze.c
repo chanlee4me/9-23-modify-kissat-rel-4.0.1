@@ -549,9 +549,9 @@ int kissat_analyze (kissat *solver, clause *conflict) {
       const unsigned lit = lits[i];
       const unsigned idx = IDX (lit);
       // printf("-----cltest22-----\n");
-      size_t old_size = kissat_size_vector(&solver->htab);
+      size_t old_size = solver->htab.end - solver->htab.begin;
       if(idx >= old_size){
-        initialize_htab(solver, &solver->htab, idx + 1000);
+        enlarge_htab(solver, &solver->htab, idx + 1);
       }
       printf("-----cltest24-----\n");
       unsigned val = get_htab_element(solver, &solver->htab, idx);
