@@ -479,6 +479,7 @@ int kissat_solve (kissat *solver) {
   kissat_require (EMPTY_STACK (solver->clause),
                   "incomplete clause (terminating zero not added)");
   kissat_require (!GET (searches), "incremental solving not supported");
+  printf("-----cltest21-----\n");  
   return kissat_search (solver);
 }
 

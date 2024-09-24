@@ -550,8 +550,10 @@ int kissat_analyze (kissat *solver, clause *conflict) {
       const unsigned lit = *p;
       assert (VALUE (lit) < 0);
       const unsigned idx = IDX (lit);
+      printf("-----cltest22-----\n");
       unsigned val = get_htab_element(solver, &solver->htab, idx);
       set_htab_element(solver, &solver->htab, idx, val + 1);
+      printf("-----cltest23-----\n");
     }
     //end
     unsigned conflict_level;
