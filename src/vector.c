@@ -46,8 +46,9 @@ unsigned get_htab_element(kissat *solver, vector *htab, size_t index) {
     size_t size = kissat_size_vector(htab);
     assert(index < size);
     printf("-----cltest28-----\nindex = %zu\nsize = %zu\n", index, size);
-    unsigned *data = kissat_begin_vector(solver, htab);
-    return data[index];
+    // unsigned *data = kissat_begin_vector(solver, htab);
+    printf("-----cltest28.1-----\nhtab.begin = %u\n", *htab->begin);
+    return htab->begin[index];
 }
 //通过索引修改htab中的元素
 void set_htab_element(kissat *solver, vector *htab, size_t index, unsigned value) {
