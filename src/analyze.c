@@ -545,12 +545,10 @@ int kissat_analyze (kissat *solver, clause *conflict) {
     //统计每个变量在冲突子句中的出现频率
     unsigned *lits = conflict->lits;
     const unsigned conflict_size = conflict->size;
-    const unsigned *const end_of_lits = lits + conflict_size;
-    for (const unsigned *p = lits; p != end_of_lits; p++) {
-      const unsigned lit = *p;
-      assert (VALUE (lit) < 0);
+    for (int i = 0; i < conflict_size; i++) {
+      const unsigned lit = lits[i];
       const unsigned idx = IDX (lit);
-      printf("-----cltest22-----\n");
+      // printf("-----cltest22-----\n");
       size_t old_size = kissat_size_vector(&solver->htab);
       if(idx >= old_size){
         initialize_htab(solver, &solver->htab, idx + 1000);

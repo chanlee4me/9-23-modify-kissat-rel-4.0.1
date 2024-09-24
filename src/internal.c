@@ -169,11 +169,11 @@ void kissat_reserve (kissat *solver, int max_var) {
     for (unsigned idx = 0; idx != (unsigned) max_var; idx++)
       kissat_activate_literal (solver, LIT (idx));
   }
-  printf("-----cltest1-----\n");
+  // printf("-----cltest1-----\n");
   //added by cl
   initialize_htab(solver, &solver->htab, max_var);
   //end
-  printf("-----cltest2-----\n");
+  // printf("-----cltest2-----\n");
 
 }
 
@@ -479,7 +479,7 @@ int kissat_solve (kissat *solver) {
   kissat_require (EMPTY_STACK (solver->clause),
                   "incomplete clause (terminating zero not added)");
   kissat_require (!GET (searches), "incremental solving not supported");
-  printf("-----cltest21-----\n");  
+  // printf("-----cltest21-----\n");  
   return kissat_search (solver);
 }
 
