@@ -553,18 +553,21 @@ int kissat_analyze (kissat *solver, clause *conflict) {
       printf("-----cltest22-----\n");
       size_t old_size = kissat_size_vector(&solver->htab);
       if(idx >= old_size){
-        initialize_htab(solver, &solver->htab, idx + 1);
+        initialize_htab(solver, &solver->htab, idx + 1000);
       }
       printf("-----cltest24-----\n");
       unsigned val = get_htab_element(solver, &solver->htab, idx);
+      printf("-----cltest25-----\n");
       set_htab_element(solver, &solver->htab, idx, val + 1);
       printf("-----cltest23-----\n");
+
     }
     //end
     unsigned conflict_level;
     //added by cl
     int myGlue = 0;
     //end
+    printf("-----cltest26-----\n");
     if (one_literal_on_conflict_level (solver, conflict, &conflict_level))
       res = 1;
     else if (!conflict_level)
